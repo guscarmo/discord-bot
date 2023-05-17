@@ -16,6 +16,24 @@ except FileNotFoundError:
 # Configuração do bot
 bot = commands.Bot(command_prefix='!', intents=intents)
 
+@bot.event
+async def on_command_error(ctx, error):
+    if isinstance(error, commands.CommandNotFound):
+        await ctx.send("Comando não encontrado. Digite um comando válido! \n!commands para listar os comandos.")
+
+@bot.command(name='commands')
+async def custom_help(ctx, *args):
+    if not args:
+        embed = discord.Embed(title="Comandos do Bot", description="Aqui estão os comandos disponíveis:")
+        # Adicione campos ao embed para cada comando personalizado do seu bot
+        embed.add_field(name="!addlink", value="Adiciona um novo link")
+        embed.add_field(name="!allinks", value="Exibe todos os links cadastrados")
+        embed.add_field(name="!client", value="Busca pelo cliente")
+        embed.add_field(name="!title", value="Busca pelo titulo")
+        await ctx.send(embed=embed)
+    else:
+        pass
+
 # Comando para adicionar um novo link
 @bot.command()
 async def addlink(ctx, canal:str, site:str, link:str):
@@ -27,7 +45,7 @@ async def addlink(ctx, canal:str, site:str, link:str):
 
 # Comando para exibir todos os links cadastrados
 @bot.command()
-async def showlinks(ctx):
+async def allinks(ctx):
     global df_links
 
     # Verifica se existem links cadastrados
@@ -43,7 +61,7 @@ async def showlinks(ctx):
     await ctx.send(msg)
 
 @bot.command()
-async def cliente(ctx, canal:str):
+async def client(ctx, canal:str):
     global df_links
 
     #filtered_links = df_links.loc[df_links['Canal'] == canal]
@@ -60,7 +78,7 @@ async def cliente(ctx, canal:str):
     await ctx.send(msg)
 
 @bot.command()
-async def nome(ctx, nome:str):
+async def title(ctx, nome:str):
     global df_links
 
     filtered_links = df_links[df_links['Site'].str.contains(nome)]
@@ -76,4 +94,4 @@ async def nome(ctx, nome:str):
     await ctx.send(msg)
 
 # Executa o bot
-bot.run('TOKEN')
+bot.run('')
