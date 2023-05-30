@@ -1,6 +1,10 @@
+import os
 import discord
 import pandas as pd
 from discord.ext import commands
+import asyncio
+import sys
+from dotenv import load_dotenv
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -93,5 +97,15 @@ async def title(ctx, nome:str):
 
     await ctx.send(msg)
 
+@bot.command()
+async def valida(ctx, name:str):
+    file_path = 'C:/Users/Gustavo/Projetos/dataValidator/main.py'
+    cmd = ['python', file_path, f'{name}.env']
+
+    process = await asyncio.create_subprocess_exec(*cmd)
+
+    await process.communicate()
+
 # Executa o bot
-bot.run('')
+load_dotenv()
+bot.run(os.getenv('ID_BOT'))
